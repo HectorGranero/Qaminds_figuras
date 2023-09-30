@@ -1,9 +1,44 @@
 package abstraccion;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class FiguraTest {
+    WebDriver driver;
+
+    @BeforeTest
+    public void openBrowser() {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+
+        driver.manage().window().maximize();
+        driver.get("https://mvnrepository.com/");
+
+    }
+    @Test
+    public void browser() {
+        WebElement element = driver.findElement(By.id("query"));
+
+        element.sendKeys("Selenium");
+
+        WebElement button = driver.findElement(By.cssSelector("#search > form > input.button"));
+        button.click();
+
+        WebElement result = driver.findElement(By.cssSelector("div.content > div:nth-child(3) > div.im-header > h2 > a:nth-child(2)"));
+
+        Assert.assertTrue(result.getText().contains("Selenium"));
+    }
+    @AfterTest
+    public void closeBrowser() {
+        driver.quit();
+    }
 
     @Test
     public void validarCalcularAreaCirculo(){
